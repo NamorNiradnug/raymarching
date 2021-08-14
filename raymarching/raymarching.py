@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import sys
 from typing import Tuple, Union, Iterable, Final, final, Optional, Dict, Annotated, List
 from abc import abstractmethod, ABC
 from pkg_resources import resource_filename
@@ -99,6 +101,9 @@ class Scene:
     def __init__(self, name: Optional[str] = None):
         self.name: Optional[str] = name
         self.sdf: Optional[SDF] = None
+        if "--scene-name-only" in sys.argv:
+            print(self.name if self.name is not None else "Unnamed scene")
+            exit(0)
 
     def set_sdf(self, sdf: SDF) -> None:
         self.sdf: SDF = sdf
@@ -107,12 +112,12 @@ class Scene:
         """Generates GLSL fragment shader which """
         if self.sdf is None:
             self.sdf = Emptiness()
-        sdf_types: str = '\n'.join(sdf.declaration() for sdf in SDF.generated_sdfs())
+        sdf_types: str = ''.join(sdf.declaration() + ";\n" for sdf in SDF.generated_sdfs())
         sdscene: str = f"return sdist(p, {self.sdf.initialisation()});"
         with open(resource_filename("raymarching", "raymarching.frag")) as template:
             src = template.readline()
-            src += "#define TEMPLATE_SDFTYPES \\\n" + sdf_types + "\n"
-            src += "#define TEMPLATE_SDSCENE \\\n" + sdscene + "\n"
+            src += "#define TEMPLATE_SDFTYPES \\\n" + sdf_types.replace("\n", "\\\n") + "\n"
+            src += "#define TEMPLATE_SDSCENE \\\n" + sdscene.replace("\n", "\\\n") + "\n"
             src += template.read()
             print(src)
 

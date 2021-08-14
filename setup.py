@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="raymarching",
-    version="0.1.1",
+    version="0.1.2",
     author="NamorNiradnug",
     author_email="roma57linux@gmail.com",
     description="Module for ray marching GLSL fragment shaders generation.",
