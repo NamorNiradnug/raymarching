@@ -5,5 +5,4 @@ This module mainly uses in [RayMarcher](https://github.com/NamorNiradnug/RayMarc
 `raymarching` is published on [pypi.org](https://pypi.org/project/raymarching) and can be installed via `pip`:
 ```bash
 $ pip install raymarching
-
 ```
