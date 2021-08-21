@@ -144,7 +144,7 @@ class SDFOperator(SDF):
         for o in self.objects[:-2]:
             answer += f"sdist(p, o{o.id}), {self.func}("
         return answer + f"sdist(p, o{self.objects[-2].id}), sdist(p, o{self.objects[-1].id})" + \
-               ")" * (len(self.objects) - 1)
+               ")" * (len(self.objects) - 1) + ";"
 
 
 class Intersection(SDFOperator):
