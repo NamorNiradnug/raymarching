@@ -109,7 +109,7 @@ class Scene:
         self.sdf: SDF = sdf
 
     def process(self) -> None:
-        """Generates GLSL fragment shader which """
+        """Generates and prints GLSL fragment shader of scene."""
         if self.sdf is None:
             self.sdf = Emptiness()
         sdf_types: str = ''.join(sdf.declaration() + ";\n" for sdf in SDF.generated_sdfs())
@@ -130,6 +130,33 @@ class Emptiness(SDF):
 class Sphere(SDF):
     def sdist(self) -> str:
         return "return length(p) - 1.0;"
+
+
+class AABBox(SDF):
+    def __init__(self, r: vec3):
+        super().__init__()
+        self.parameters |= {"r": ("vec3", to_glsl_vec(r, 3))}
+
+    def sdist(self) -> str:
+        return "vec3 d = abs(p) - o.r; return min(max(d.x, max(d.y, d.z)), 0.0) + length(max(d, 0.0));"
+
+
+class Plane(SDF):
+    def sdist(self) -> str:
+        return "return abs(p.y);"
+
+
+class Cylinder(SDF):
+    def __init__(self, radius, height2):
+        super().__init__()
+        self.parameters |= {
+            "radius": ("float", str(radius)),
+            "height2": ("float", str(height2)),
+        }
+
+    def sdist(self) -> str:
+        return """vec2 d = vec2(length(p.xz) - o.radius, abs(p.y) - o.height2); 
+                  return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));"""
 
 
 class SDFOperator(SDF):
@@ -172,16 +199,13 @@ class SmoothUnion(SDFOperator):
                ", o.k)" * (len(self.objects) - 1) + ";"
 
 
-class AABBox(SDF):
-    def __init__(self, r: vec3):
+class Difference(SDF):
+    def __init__(self, o1: SDF, o2: SDF):
         super().__init__()
-        self.parameters |= {"r": ("vec3", to_glsl_vec(r, 3))}
+        self.parameters |= {
+            "o1": o1,
+            "o2": o2,
+        }
 
-    def sdist(self) -> str:
-        return "vec3 d = abs(p) - o.r; return min(max(d.x, max(d.y, d.z)), 0.0) + length(max(d, 0.0));"
-
-
-class Plane(SDF):
-    def sdist(self) -> str:
-        return "return abs(p.y);"
-
+    def sdist(self):
+        return "return max(sdist(p, o.o1), -sdist(p, o.o2));"

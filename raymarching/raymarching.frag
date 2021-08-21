@@ -26,9 +26,8 @@ in vec2 uv;
 
 out vec4 fragColor;
 
-const float PI = 3.1415926538;
-const float INF = 1.0 / 0.0;
 const vec3 UP = vec3(0.0, 1.0, 0.0);
+const float INF = 1.0 / 0.0;
 const vec3 INF3 = vec3(INF, INF, INF);
 
 uniform float TIME;
@@ -48,11 +47,7 @@ uniform struct Camera
     float fov2_tan;
 } camera;
 
-uniform struct Sun
-{
-    vec3 dir;
-    vec3 color;
-} sun;
+uniform vec3 sun;
 
 struct Transform
 {
@@ -107,10 +102,10 @@ vec3 raymarch(vec3 p, vec3 ray_dir, float max_dist)
 
 float lightCoef(vec3 pos, vec3 normal)
 {
-    float light = dot(sun.dir, normal);
+    float light = dot(sun, normal);
     if (SHADOWS_ENABLED)
     {
-        vec3 hit_p = raymarch(pos + normal * MIN_HIT_DIST, sun.dir, 3 * RENDER_DISTANCE);
+        vec3 hit_p = raymarch(pos + normal * MIN_HIT_DIST, sun, 3 * RENDER_DISTANCE);
         if (length(hit_p - pos) > MIN_HIT_DIST * 2 && hit_p != INF3)
         {
            light /= 2;
@@ -122,7 +117,7 @@ float lightCoef(vec3 pos, vec3 normal)
 vec3 hitColor(vec3 p)
 {
     vec3 n = normalAtPoint(p);
-    return sun.color * lightCoef(p, n);
+    return vec3(1, 1, 1) * lightCoef(p, n);
 }
 
 vec3 rayDirection()
@@ -137,7 +132,7 @@ vec3 rayDirection()
 
 vec3 skyColor(vec3 direction)
 {
-    float light_dot = dot(direction, sun.dir);
+    float light_dot = dot(direction, sun);
     if (light_dot > 0.995)
     {
         float a = normalize(0.0);
