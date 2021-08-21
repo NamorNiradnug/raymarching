@@ -13,7 +13,7 @@ vec3 rotated(vec3 p, vec4 q)
     return p + 2.0 * cross(q.xyz, cross(q.xyz, p) + q.w * p);
 }
 
-#define SDTYPE(name, params, sdf) \
+#define SDFType(name, params, sdf) \
     struct name params; \
     float sdistNoTransform(vec3 p, name o) sdf \
     float sdist(vec3 p, name o) \

@@ -61,7 +61,7 @@ class SDF(ABC):
     @final
     def declaration(self) -> str:
         """SDF declaration in shader."""
-        return f"SDFTYPE({self.glsl_struct_name()},\n" \
+        return f"SDFType({self.glsl_struct_name()},\n" \
                "{\n" + "".join(self.parameters[param][0] + " " + param + ";\n" for param in sorted(self.parameters)) + \
                                                                                             "Transform t;\n},\n" \
                "{\n" + self.sdist() + "\n})"
