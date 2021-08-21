@@ -93,7 +93,7 @@ class SDF(ABC):
 
     @final
     def scaled(self, k) -> SDF:
-        self.scale = f"(self.scale * ({k}))"
+        self.scale = f"({self.scale} * ({k}))"
         return self
 
 
@@ -142,8 +142,8 @@ class SDFOperator(SDF):
     def sdist(self) -> str:
         answer = f"return {self.func}("
         for o in self.objects[:-2]:
-            answer += f"sdist(p, o{o.id}), {self.func}("
-        return answer + f"sdist(p, o{self.objects[-2].id}), sdist(p, o{self.objects[-1].id})" + \
+            answer += f"sdist(p, o.o{o.id}), {self.func}("
+        return answer + f"sdist(p, o.o{self.objects[-2].id}), sdist(p, o.o{self.objects[-1].id})" + \
                ")" * (len(self.objects) - 1) + ";"
 
 
@@ -167,9 +167,9 @@ class SmoothUnion(SDFOperator):
     def sdist(self) -> str:
         answer = f"return {self.func}("
         for o in self.objects[:-2]:
-            answer += f"sdist(p, o{o.id}), {self.func}("
-        return answer + f"sdist(p, o{self.objects[-2].id}), sdist(p, o{self.objects[-1].id})" + \
-               ", k)" * (len(self.objects) - 1) + ";"
+            answer += f"sdist(p, o.o{o.id}), {self.func}("
+        return answer + f"sdist(p, o.o{self.objects[-2].id}), sdist(p, o.o{self.objects[-1].id})" + \
+               ", o.k)" * (len(self.objects) - 1) + ";"
 
 
 class AABBox(SDF):
