@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="raymarching",
-    version="0.1.2",
+    version="0.1.3",
     author="NamorNiradnug",
     author_email="roma57linux@gmail.com",
     description="Module for ray marching GLSL fragment shaders generation.",
@@ -25,5 +25,5 @@ setuptools.setup(
     ],
     packages=["raymarching"],
     package_data={'raymarching': ["raymarching.frag"]},
-    python_requires=">=3.7",
+    python_requires=">=3.9",
 )

@@ -116,8 +116,8 @@ class Scene:
         sdscene: str = f"return sdist(p, {self.sdf.initialisation()});"
         with open(resource_filename("raymarching", "raymarching.frag")) as template:
             src = template.readline()
-            src += "#define TEMPLATE_SDFTYPES \\\n" + sdf_types.replace("\n", "\\\n") + "\n"
-            src += "#define TEMPLATE_SDSCENE \\\n" + sdscene.replace("\n", "\\\n") + "\n"
+            src += "#define TEMPLATED_SDFTYPES \\\n" + sdf_types.replace("\n", "\\\n") + "\n"
+            src += "#define TEMPLATED_SDSCENE \\\n" + sdscene.replace("\n", "\\\n") + "\n"
             src += template.read()
             print(src)
 
@@ -155,7 +155,7 @@ class Cylinder(SDF):
         }
 
     def sdist(self) -> str:
-        return """vec2 d = vec2(length(p.xz) - o.radius, abs(p.y) - o.height2); 
+        return """vec2 d = vec2(length(p.xz) - o.radius, abs(p.y) - o.height2);
                   return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));"""
 
 

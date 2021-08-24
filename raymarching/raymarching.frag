@@ -1,11 +1,11 @@
 #version 440
 
-#ifndef TEMPLATE_SDSCENE
-#define TEMPLATE_SDSCENE return INF;
+#ifndef TEMPLATED_SDSCENE
+#define TEMPLATED_SDSCENE return INF;
 #endif
 
-#ifndef TEMPLATE_SDFTYPES
-#define TEMPLATE_SDFTYPES
+#ifndef TEMPLATED_SDFTYPES
+#define TEMPLATED_SDFTYPES
 #endif
 
 vec3 rotated(vec3 p, vec4 q)
@@ -64,11 +64,11 @@ float smin(float a, float b, float k)
     return mix(b, a, h) - k * h * (1.0 - h);
 }
 
-TEMPLATE_SDFTYPES
+TEMPLATED_SDFTYPES
 
 float sdScene(vec3 p)
 {
-    TEMPLATE_SDSCENE
+    TEMPLATED_SDSCENE
 }
 
 vec3 normalAtPoint(vec3 p)
@@ -89,10 +89,6 @@ vec3 raymarch(vec3 p, vec3 ray_dir, float max_dist)
         float scene_dist = abs(sdScene(pos));
         if (scene_dist < MIN_HIT_DIST)
         {
-            if (scene_dist < MIN_HIT_DIST / 10.0)
-            {
-                pos -= ray_dir * MIN_HIT_DIST / 2.0;
-            }
             return pos;
         }
         depth += scene_dist;
